@@ -1,0 +1,25 @@
+{
+  "name": "wingjs",
+  "version": "1.0.0",
+  "description": "A utility and elegant javascript library",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lesterlong007/wingjs.git"
+  },
+  "keywords": [
+    "wing"
+  ],
+  "author": "Lester",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lesterlong007/wingjs/issues"
+  },
+  "homepage": "https://github.com/lesterlong007/wingjs#readme",
+  "devDependencies": {
+    "rollup": "^4.12.0"
+  }
+}
