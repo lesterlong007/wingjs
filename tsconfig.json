@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "noImplicitAny": true,
+    "module": "esnext",
+    "target": "es5",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "declaration": true,
+    "baseUrl": "./",
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "scripts"]
+}
