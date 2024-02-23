@@ -50,7 +50,7 @@ export const getCookie = (key: string): string => {
   }
   const regExe = new RegExp(`${key}=([\\w]+)`);
   const res = document.cookie.match(regExe) || [];
-  return res[1];
+  return res[1] || '';
 };
 
 /**
@@ -75,13 +75,14 @@ export const getDataType = (data: any): string => Object.prototype.toString.call
  * @returns boolean
  */
 export const isEmpty = (data: any): boolean => {
-  if (!data) {
-    return true;
-  }
-  if (getDataType(data) === 'array') {
+  const dateType = getDataType(data);
+  if (dateType === 'array') {
     return data.length === 0;
+  } else if (dateType === 'object') {
+    return  Object.keys(data).length === 0;
+  } else {
+    return !data;
   }
-  return Object.keys(data).length === 0;
 };
 
 /**
