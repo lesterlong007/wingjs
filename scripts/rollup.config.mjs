@@ -9,13 +9,17 @@ export default {
   input: 'src/index.tsx',
   output: [
     {
-      file: 'dist/umd/index.js',
+      file: 'dist/index.umd.js',
       format: 'umd',
       name: 'WingJS',
     },
     {
-      file: 'dist/es/index.js',
+      file: 'dist/index.es.js',
       format: 'es'
+    },
+    {
+      file: 'dist/index.cjs.js',
+      format: 'cjs'
     }
   ],
   plugins: [
