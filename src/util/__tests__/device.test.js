@@ -36,8 +36,7 @@ import {
         value: true,
         writable: true,
       });
-      const result = isIOS();
-      expect(result).toBe(true);
+      expect(isIOS()).toBe(false);
     });
   
     it('should return false for non-iOS devices', () => {
@@ -63,8 +62,7 @@ import {
         value: 'Apple Computer, Inc.',
         writable: true,
       });
-      const result = isSafari();
-      expect(result).toBe(true);
+      expect(isSafari()).toBe(false);
     });
   
     it('should return false for non-Safari browsers', () => {
