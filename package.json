@@ -7,6 +7,9 @@
   "jsnext:main": "dist/index.es.js",
   "browser": "dist/index.umd.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "test": "jest",
     "lint": "eslint --fix --ext .js,.ts, src/",
