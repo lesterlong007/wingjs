@@ -55,7 +55,7 @@ export const getCookie = (key: string): string => {
 
 /**
  * Generate random string
- * @param prefix 
+ * @param prefix
  * @returns string
  */
 export const getRandomStr = (prefix = ''): string => {
@@ -79,7 +79,7 @@ export const isEmpty = (data: any): boolean => {
   if (dateType === 'array') {
     return data.length === 0;
   } else if (dateType === 'object') {
-    return  Object.keys(data).length === 0;
+    return Object.keys(data).length === 0;
   } else {
     return !data;
   }
@@ -112,7 +112,7 @@ export const deepClone = (obj: any, hash = new WeakMap()) => {
 };
 
 /**
- * Compare two objects whether are same, only traverse them recursively when they are array or object
+ * Compare two objects whether are same, only traverse them recursively when they are array, object, set, map
  * @param obj1
  * @param obj2
  * @param map
@@ -121,11 +121,31 @@ export const deepClone = (obj: any, hash = new WeakMap()) => {
 export const isObjEqual = (obj1: any, obj2: any, map = new Map()): boolean => {
   const type1 = getDataType(obj1);
   const type2 = getDataType(obj2);
-  if (type1 !== type2 || !['object', 'array'].includes(type1)) {
-    return obj1 === obj2;
-  }
-  if (type1 === 'array' && obj1.length !== obj2.length) {
+  if (type1 === type2) {
+    if (type1 === 'regexp') {
+      return obj1.source === obj2.source;
+    } else if (type1 === 'function') {
+      return obj1.toString() === obj2.toString();
+    } else if (type1 === 'date') {
+      return obj1.getTime() === obj2.getTime();
+    } else if (type1 === 'error') {
+      return obj1.message === obj2.message && obj1.stack === obj2.stack;
+    } else if (!['object', 'array', 'map', 'set'].includes(type1)) {
+      return obj1 === obj2;
+    }
+  } else {
     return false;
+  }
+  const isMapOrSet = ['set', 'map'].includes(type1);
+  const isObjOrArr = ['object', 'array'].includes(type1);
+  if (type1 === 'array') {
+    if (obj1.length !== obj2.length) {
+      return false;
+    }
+  } else if (isMapOrSet) {
+    if (obj1.size !== obj2.size) {
+      return false;
+    }
   }
   if (map.get(obj1) && map.get(obj2)) {
     return true;
@@ -134,23 +154,42 @@ export const isObjEqual = (obj1: any, obj2: any, map = new Map()): boolean => {
     map.set(obj2, true);
   }
   let flag = true;
-  const key1 = Object.keys(obj1);
-  const key2 = Object.keys(obj2);
+  const key1 = isMapOrSet ? [...obj1.keys()] : Object.keys(obj1);
+  const key2 = isMapOrSet ? [...obj2.keys()] : Object.keys(obj2);
   if (key1.length !== key2.length) {
     return false;
   }
   for (let i = 0; i < key1.length; i++) {
     const key = key1[i];
-    if (!Object.prototype.hasOwnProperty.call(obj2, key)) {
-      return false;
+    let val1 = null;
+    let val2 = null;
+    if (isObjOrArr) {
+      if (!Object.prototype.hasOwnProperty.call(obj2, key)) {
+        return false;
+      }
+      val1 = obj1[key];
+      val2 = obj2[key];
+    } else if (type1 === 'set') {
+      val1 = key;
+      val2 = key2[i];
+    } else {
+      if (!obj2.has(key)) {
+        return false;
+      }
+      val1 = obj1.get(key);
+      val2 = obj2.get(key);
     }
-    const val1 = obj1[key];
-    const val2 = obj2[key];
+
     const valType1 = getDataType(val1);
     const valType2 = getDataType(val2);
-    if (valType1 === valType2 && ['object', 'array'].includes(valType1)) {
+    const needRecursive = valType1 === valType2 && ['object', 'array', 'map', 'set'].includes(valType1);
+    if (needRecursive) {
       flag = isObjEqual(val1, val2, map);
-    } else if (val1 !== val2) {
+    }
+    if (!flag) {
+      return false;
+    }
+    if (!needRecursive && val1 !== val2) {
       return false;
     }
   }
@@ -242,7 +281,7 @@ export const throttle = (fn: FN, delay: number): FN => {
 };
 
 /**
- * Get Universally Unique Identifier 
+ * Get Universally Unique Identifier
  * @returns string
  */
 export const getUUID = () => {
